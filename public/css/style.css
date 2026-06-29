@@ -1,0 +1,134 @@
+body{
+    font-family: "Nunito", sans-serif !important;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container
+{
+    flex: 1;
+}
+
+.navbar{
+    height: 5rem;
+    background-color: white;
+    width: 100%;
+}
+
+.fa-brands
+{
+    color: #fe424d;
+    font-size: 2rem;
+}
+
+.nav-link
+{
+    color: #444444 !important;
+}
+
+.f-info-links a{
+    text-decoration: none;
+    color: #222222;
+}
+
+.f-info-links a:hover{
+    text-decoration: underline;
+}
+
+.f-info
+{
+    display: flex;
+    height: 6rem;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: #ebebeb;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.f-info-links
+{
+    width: 100%;
+}
+
+.f-info-socials
+{
+    width: 25%;
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 0.5rem;
+}
+
+.f-info-socials i 
+{
+    color: #444444;
+}
+
+.f-info-tag{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 0.3rem;
+}
+
+.f-info-socials i 
+{
+    font-size: 1.5rem;
+}
+
+.card
+{
+    border: none !important;
+    margin-top: 2rem !important;
+}
+
+.card-img-top
+{
+    border-radius: 10px !important;
+    width: 100% !important;
+    object-fit: cover !important;
+}
+
+.card-body
+{
+    padding: 0 !important;
+}
+
+.card-text p 
+{
+    font-weight: 300 !important;
+}
+
+.listing-link
+{
+    text-decoration: none;
+}
+
+.card-img-overlay
+{
+    opacity: 0;
+}
+
+.card-img-overlay:hover
+{
+    opacity: 0.2;
+    background-color: #ebebeb;
+}
+
+.add-btn
+{
+    border: none !important;
+    background-color: rgb(113, 105, 105) !important;
+    /* padding: 1rem 2rem 1rem 2rem !important; */
+    
+}
+
+.show-image
+{
+    height: 30vh;
+}
+
+.btns{
+    display: flex;
+}
