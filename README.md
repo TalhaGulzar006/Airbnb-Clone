@@ -14,3 +14,14 @@ A full-stack property listing web application built with Node.js, Express.js, Mo
 - Reusable asyncWrap utility to handle async errors without repetitive try-catch blocks
 - Default image URL fallback when no image is provided
 - Reusable EJS layout using ejs-mate
+
+- ## Project Structure
+
+- app.js          - Main server file with all routes
+- models/         - Mongoose schema and model
+- views/          - EJS templates (listings, layouts, includes)
+- utils/          - ExpressError and asyncWrap helper
+- schema.js       - Joi validation schema
+- init/           - Database seed data and script
+- public/         - Static CSS and JS files
+
