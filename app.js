@@ -8,7 +8,11 @@ const ExpressError = require("./utils/ExpressError.js");
 
 const Listing = require("./models/listing.js");
 const methodOverride = require("method-override");
-const {listingSchema} = require("./schema.js");
+const {listingSchema, reviewSchema} = require("./schema.js");
+const Review = require("./models/review.js");
+// const WrapAsync = require("./utils/WrapAsync.js");
+const review = require("./models/review.js");
+const listings = require("./routes/listing.js");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -37,27 +41,14 @@ app.get("/", (req, res) => {
   res.send("Server is working");
 });
 
-//Index Route
-app.get("/listings", asyncWrap(async (req, res) => {
-  const allListings = await Listing.find({});
-  res.render("listings/index.ejs", { allListings });
-}));
 
-//New Route
-app.get("/listings/new", (req, res) => {
-  res.render("listings/new.ejs");
-});
 
-//Show Route
-app.get("/listings/:id", asyncWrap(async (req, res) => {
-  let { id } = req.params;
-  const listing = await Listing.findById(id);
-  res.render("listings/show.ejs", { listing });
-}));
 
-const validateListing = (req,res,next)=>
+
+
+const validateReview = (req,res,next)=>
 {
-let {error} = listingSchema.validate(req.body);
+let {error} = reviewSchema.validate(req.body);
     
     if(error)
     {
@@ -69,65 +60,36 @@ let {error} = listingSchema.validate(req.body);
     }
 };
 
-//Create Route
-app.post(
-  "/listings",
-  asyncWrap(async (req, res, next) => {
-    // try{
-    // if(!req.body.listing)
-    // {
-    //   throw new ExpressError(400,"Client Side Mistake");
-    // }
+app.use("/listings",listings);
 
-    
-    const newListing = new Listing(req.body.listing);
-    await newListing.save();
-    res.redirect("/listings");
 
-    // try{
-    // const newListing = new Listing(req.body.listing);
-    // await newListing.save();
-    // res.redirect("/listings");
-    // }
-    // catch(err)
-    // {
-    //   next(err);
-    // }
-  // }
-  // catch(err)
-  // {
-  //   throw new ExpressError(400,"your are putting bad request");
-  // }
-  // }),
+
+//Review
+app.post("/listings/:id/reviews",validateReview,asyncWrap(async(req,res)=>
+{
+
+  let listing = await Listing.findById(req.params.id);
+  let newReview = new Review(req.body.review);
+  listing.reviews.push(newReview);
+
+  await listing.save();
+  await newReview.save();
+
+  console.log("review saved");
+  res.redirect(`/listings/${listing.id}`);
 }));
 
-//Edit Route
-app.get("/listings/:id/edit", asyncWrap(async (req, res) => {
-  let { id } = req.params;
-  const listing = await Listing.findById(id);
-  res.render("listings/edit.ejs", { listing });
-}));
-
-//Update Route
-app.put("/listings/:id", asyncWrap(async (req, res,next) => {
-  try{
-  let { id } = req.params;
-  await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+//delete review route
+app.delete("/listings/:id/reviews/:reviewid",asyncWrap(async(req,res)=>
+{
+  let {id,reviewid} = req.params;
+  await Listing.findByIdAndUpdate(id,{$pull:{reviews:reviewid}});
+  await Review.findByIdAndDelete(reviewid);
   res.redirect(`/listings/${id}`);
-  }
-  catch(err)
-  {
-    throw new ExpressError(400,"client bad request");
-  }
+
 }));
 
-//Delete Route
-app.delete("/listings/:id", asyncWrap(async (req, res) => {
-  let { id } = req.params;
-  let deletedListing = await Listing.findByIdAndDelete(id);
-  console.log(deletedListing);
-  res.redirect("/listings");
-}));
+
 
 app.all("/*splat",(req, res, next) => {
 
@@ -140,6 +102,9 @@ app.use((err, req, res, next) => {
   // res.status(status).send(message);
   res.status(status).render("error.ejs",{message});
 });
+
+
+
 
 // app.get("/testListing", async (req, res) => {
 //   let sampleListing = new Listing({
