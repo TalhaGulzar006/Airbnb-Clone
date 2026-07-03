@@ -1,4 +1,4 @@
-# Wanderlust - Airbnb Clone
+# mydatabase - Airbnb Clone
 
 A full-stack property listing web application inspired by Airbnb, built using Node.js, Express.js, MongoDB, EJS, and Passport.js. The application allows users to browse listings, create and manage properties, write reviews, and securely authenticate using local authentication.
 
