@@ -1,162 +1,245 @@
-# 🏡 Wanderlust - Airbnb Clone
+# Wanderlust - Airbnb Clone
 
-Wanderlust is a full-stack Airbnb-inspired web application that allows users to browse, create, update, and manage property listings. The project is built using the MERN backend technologies with server-side rendering using EJS and follows RESTful architecture.
-
----
-
-## 🚀 Features
-
-### Property Listings
-- View all property listings
-- View complete details of a listing
-- Create new property listings
-- Edit existing listings
-- Delete listings
-- Default image support when no image URL is provided
-
-### Reviews
-- Add reviews for listings
-- Rate properties (1–5 stars)
-- Delete reviews
-- One-to-Many relationship between Listings and Reviews
-
-### Validation & Error Handling
-- Server-side validation using Joi
-- Custom Express error handling
-- Reusable async error wrapper
-- Proper HTTP status codes
-- Custom 404 page
-
-### Backend Functionality
-- RESTful routing
-- Express Router for modular routing
-- MongoDB database using Mongoose
-- Method Override for PUT & DELETE requests
-- Database population using Mongoose Populate
-- Cascade deletion of reviews when a listing is deleted
-
-### UI
-- Responsive interface using Bootstrap 5
-- Reusable layouts with ejs-mate
-- Dynamic EJS templates
-- Clean navigation and forms
+A full-stack property listing web application inspired by Airbnb, built using Node.js, Express.js, MongoDB, EJS, and Passport.js. The application allows users to browse listings, create and manage properties, write reviews, and securely authenticate using local authentication.
 
 ---
 
-# 🛠️ Tech Stack
+## Features
+
+- User Registration and Login
+- Secure Authentication using Passport.js
+- Session Management with Express Session
+- Protected Routes (Authentication Middleware)
+- Property Listing CRUD Operations
+- Review System
+- Server-side Form Validation using Joi
+- Flash Messages for User Feedback
+- Custom Error Handling
+- Method Override for PUT & DELETE Requests
+- Responsive User Interface
+- MongoDB Database Integration
+- EJS Templating with Layout Support
+
+---
+
+## Tech Stack
 
 ### Frontend
+
 - HTML5
 - CSS3
 - Bootstrap 5
-- JavaScript (ES6)
+- JavaScript
 - EJS
-- ejs-mate
+- EJS-Mate
 
 ### Backend
+
 - Node.js
 - Express.js
 
 ### Database
+
 - MongoDB
 - Mongoose
 
-### Validation & Utilities
+### Authentication
+
+- Passport.js
+- Passport Local Strategy
+- Passport-Local-Mongoose
+
+### Validation
+
 - Joi
-- Method Override
-- ExpressError (Custom Error Class)
-- Async Wrapper Utility
 
 ---
 
-# 📂 Project Structure
+# Main Concepts Implemented
+
+This project demonstrates several important backend development concepts including:
+
+- RESTful Routing
+- MVC-inspired Project Structure
+- Authentication using Passport.js
+- User Registration & Login
+- Route Protection (Authorization Middleware)
+- Session Management
+- Express Sessions
+- Flash Messages
+- Password Hashing (Passport Local Mongoose)
+- CRUD Operations
+- MongoDB Relationships (Listings & Reviews)
+- Mongoose Schema & Models
+- Schema Validation using Joi
+- Custom Error Handling
+- Async Error Wrapper
+- Express Middleware
+- Method Override
+- Dynamic Routing
+- Template Rendering with EJS
+- Static File Serving
+- Form Validation
+- HTTP Status Code Handling
+- Modular Routing
+- Reusable Utility Functions
+
+---
+
+# Project Structure
 
 ```
-Airbnb Clone
-│
-├── init/
-│   ├── data.js
-│   └── index.js
+AirBnbProject/
 │
 ├── models/
-│   ├── listing.js
-│   └── review.js
-│
-├── public/
-│   ├── css/
-│   └── js/
-│
 ├── routes/
-│   └── listing.js
-│
-├── utils/
-│   ├── ExpressError.js
-│   └── WrapAsync.js
-│
 ├── views/
-│   ├── includes/
-│   ├── layouts/
-│   ├── listings/
-│   └── error.ejs
-│
+├── public/
+├── utils/
+├── init/
 ├── app.js
 ├── schema.js
-├── package.json
-└── README.md
+├── middleware.js
+└── package.json
 ```
 
 ---
 
-# 📌 REST API Routes
+# Installation
 
-| Method | Route | Description |
-|---------|-------|-------------|
-| GET | /listings | Show all listings |
-| GET | /listings/new | New listing form |
-| POST | /listings | Create listing |
-| GET | /listings/:id | Show listing |
-| GET | /listings/:id/edit | Edit listing form |
-| PUT | /listings/:id | Update listing |
-| DELETE | /listings/:id | Delete listing |
-| POST | /listings/:id/reviews | Add review |
-| DELETE | /listings/:id/reviews/:reviewId | Delete review |
+Clone the repository
 
+```bash
+git clone <repository-url>
+```
 
-# 📖 What I Learned
+Navigate to the project
 
-During the development of this project, I gained hands-on experience with:
+```bash
+cd AirBnbProject
+```
 
+Install dependencies
+
+```bash
+npm install
+```
+
+Start MongoDB
+
+```bash
+mongod
+```
+
+Run the application
+
+```bash
+node app.js
+```
+
+or
+
+```bash
+nodemon app.js
+```
+
+Visit
+
+```
+http://localhost:8080/listings
+```
+
+---
+
+# Dependencies
+
+- Express.js
+- Mongoose
+- Passport.js
+- Passport Local
+- Passport Local Mongoose
+- Express Session
+- Connect Flash
+- Joi
+- Method Override
+- Cookie Parser
+- EJS
+- EJS-Mate
+
+---
+
+# Application Features
+
+### Authentication
+
+- User Signup
+- User Login
+- User Logout
+- Secure Password Hashing
+- Persistent Login Sessions
+
+### Listings
+
+- View All Listings
+- View Single Listing
+- Create New Listing
+- Edit Listing
+- Delete Listing
+
+### Reviews
+
+- Add Reviews
+- Delete Reviews
+- Reviews Linked to Listings
+
+### Validation
+
+- Server-side Validation using Joi
+- Invalid Requests are Blocked
+
+### User Experience
+
+- Flash Success Messages
+- Flash Error Messages
+- Friendly Error Pages
+
+---
+
+# Learning Outcomes
+
+This project helped me gain practical experience with:
+
+- Backend development using Node.js and Express.js
+- MongoDB database design
+- Authentication and session management
 - Building RESTful web applications
-- Express.js routing and middleware
-- MongoDB data modeling with Mongoose
-- One-to-Many database relationships
-- Server-side validation using Joi
-- Error handling in Express
-- CRUD operations
-- EJS templating
-- MVC project organization
-- Git and GitHub workflow
+- Form validation and error handling
+- Working with middleware
+- Managing user authentication securely
+- Building dynamic web pages using EJS
+- Organizing large Express applications into multiple modules
 
 ---
 
-# 🚀 Future Improvements
+## Future Improvements
 
-- User Authentication & Authorization
-- Login & Signup
-- Cloudinary Image Uploads
-- Interactive Maps using Mapbox
-- Search & Filtering
-- Wishlist Feature
+- Image Uploads using Cloudinary
+- User Authorization (Only owner can edit/delete listings)
+- Search & Filter Listings
+- Google Maps Integration
+- Favorites/Wishlist
 - Booking System
-- User Profiles
-- Image Gallery
+- Profile Management
 - Pagination
+- Responsive Improvements
 
 ---
 
-# 👨‍💻 Author
+## Author
 
 **Muhammad Talha Gulzar**
+
+Aspiring MERN Stack Developer passionate about building full-stack web applications and continuously learning modern web technologies.
 
 
 

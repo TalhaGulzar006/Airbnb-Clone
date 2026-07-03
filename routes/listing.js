@@ -4,6 +4,7 @@ const asyncWrap = require("../utils/WrapAsync.js");
 const ExpressError = require("../utils/ExpressError.js");
 const {listingSchema, reviewSchema} = require("../schema.js");
 const Listing = require("../models/listing.js");
+const {isLoggedIn} = require("../middleware.js");
 
 const validateListing = (req,res,next)=>
 {
@@ -30,7 +31,8 @@ router.get(
 );
 
 //New Route
-router.get("/new", (req, res) => {
+router.get("/new",isLoggedIn, (req, res) => {
+ 
   res.render("listings/new.ejs");
 });
 
@@ -40,13 +42,14 @@ router.get(
   asyncWrap(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id).populate("reviews");
+   
     res.render("listings/show.ejs", { listing });
   }),
 );
 
 //Create Route
 router.post(
-  "/",
+  "/",isLoggedIn,
   validateListing,
   asyncWrap(async (req, res, next) => {
     // try{
@@ -56,6 +59,7 @@ router.post(
     // }
     const newListing = new Listing(req.body.listing);
     await newListing.save();
+    req.flash("success","New Listing Created");
     res.redirect("/listings");
     // try{
     // const newListing = new Listing(req.body.listing);
@@ -77,7 +81,7 @@ router.post(
 
 //Edit Route
 router.get(
-  "/:id/edit",
+  "/:id/edit",isLoggedIn,
   asyncWrap(async (req, res) => {
     let { id } = req.params;
     const listing = await Listing.findById(id);
@@ -87,12 +91,13 @@ router.get(
 
 //Update Route
 router.put(
-  "/:id",
+  "/:id",isLoggedIn,
   validateListing,
   asyncWrap(async (req, res, next) => {
     try {
       let { id } = req.params;
       await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+       req.flash("success","Listing Updated");
       res.redirect(`/listings/${id}`);
     } catch (err) {
       throw new ExpressError(400, "client bad request");
@@ -102,11 +107,12 @@ router.put(
 
 //Delete Route
 router.delete(
-  "/:id",
+  "/:id",isLoggedIn,
   asyncWrap(async (req, res) => {
     let { id } = req.params;
     let deletedListing = await Listing.findByIdAndDelete(id);
     console.log(deletedListing);
+     req.flash("success","Listing Deleted");
     res.redirect("/listings");
   }),
 );

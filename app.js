@@ -8,11 +8,19 @@ const ExpressError = require("./utils/ExpressError.js");
 
 const Listing = require("./models/listing.js");
 const methodOverride = require("method-override");
-const {listingSchema, reviewSchema} = require("./schema.js");
+const { listingSchema, reviewSchema } = require("./schema.js");
 const Review = require("./models/review.js");
 // const WrapAsync = require("./utils/WrapAsync.js");
 const review = require("./models/review.js");
-const listings = require("./routes/listing.js");
+const listingRouter = require("./routes/listing.js");
+const reviewRouter = require("./routes/reviews.js");
+const userRouter = require("./routes/user.js");
+const session = require("express-session");
+const flash = require("connect-flash");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user.js");
+
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -30,81 +38,70 @@ main()
   });
 
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
+  await mongoose.connect("mongodb://127.0.0.1:27017/mydatabase");
 }
 
 app.listen(8080, () => {
   console.log("Server is listening on port 8080");
 });
 
-app.get("/", (req, res) => {
-  res.send("Server is working");
-});
-
-
-
-
-
-
-const validateReview = (req,res,next)=>
-{
-let {error} = reviewSchema.validate(req.body);
-    
-    if(error)
-    {
-      throw new ExpressError(400,error);
-    }
-    else
-    {
-      next();
-    }
+const sessionOptions = {
+  secret: "mysupersecretcode",
+  resave: false,
+  saveUninitialized:true,
+  cookie : {
+    expires : Date.now() + 7*24*60*60*1000,
+    maxAge : 7*24*60*60*1000,
+    httpOnly : true,
+  },
 };
 
-app.use("/listings",listings);
+app.get("/", (req, res) => {
+  res.send("Home Page");
+});
 
+app.use(session(sessionOptions));
+app.use(flash());
 
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
-//Review
-app.post("/listings/:id/reviews",validateReview,asyncWrap(async(req,res)=>
+app.use((req,res,next)=>
 {
+  res.locals.success = req.flash("success");
+  res.locals.error = req.flash("error");
+  res.locals.currUser = req.user;
+  next();
+});
 
-  let listing = await Listing.findById(req.params.id);
-  let newReview = new Review(req.body.review);
-  listing.reviews.push(newReview);
+// app.get("/demouser", async (req, res) => {
+//   let fakeUser = new User({
+//     email: "student@gmail.com",
+//     username: "delta-student"
+//   });
 
-  await listing.save();
-  await newReview.save();
+//   let registeredUser = await User.register(fakeUser, "helloworld");
+//   res.send(registeredUser);
+// });
 
-  console.log("review saved");
-  res.redirect(`/listings/${listing.id}`);
-}));
+  
 
-//delete review route
-app.delete("/listings/:id/reviews/:reviewid",asyncWrap(async(req,res)=>
-{
-  let {id,reviewid} = req.params;
-  await Listing.findByIdAndUpdate(id,{$pull:{reviews:reviewid}});
-  await Review.findByIdAndDelete(reviewid);
-  res.redirect(`/listings/${id}`);
+app.use("/listings", listingRouter);
+app.use("/listings/:id/reviews", reviewRouter);
+app.use("/", userRouter);
 
-}));
-
-
-
-app.all("/*splat",(req, res, next) => {
-
-  next(new ExpressError(404,"file not found"));
+app.all("/*splat", (req, res, next) => {
+  next(new ExpressError(404, "file not found"));
 });
 
 app.use((err, req, res, next) => {
-
-  let {status=500,message="something went wrong"} = err;
+  let { status = 500, message = "something went wrong" } = err;
   // res.status(status).send(message);
-  res.status(status).render("error.ejs",{message});
+  res.status(status).render("error.ejs", { message });
 });
-
-
-
 
 // app.get("/testListing", async (req, res) => {
 //   let sampleListing = new Listing({
